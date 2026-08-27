@@ -50,7 +50,7 @@ public struct BME280: ~Copyable {
         }
     }
 
-    public func setup() throws(Error) {
+    public func setup() throws(PlatformError) {
         log.d("Setting up BME280")
         if !calibrationDataValid {
             log.d("No cached calibration data")
@@ -58,7 +58,7 @@ public struct BME280: ~Copyable {
         }
     }
 
-    public func reset() throws(Error) {
+    public func reset() throws(PlatformError) {
         log.d("Resetting BME280 and reading calibration data")
         try device.transmit(data: [Registers.reset.rawValue, 0xB6], timeoutMs: 100)
         vTaskDelay(.init(ms: 100))
@@ -69,7 +69,7 @@ public struct BME280: ~Copyable {
         setCalibrationData(data1: calibrationData1, data2: calibrationData2)
     }
 
-    public func read() throws(Error) -> (temperature: Float, pressure: Float, humidity: Float) {
+    public func read() throws(PlatformError) -> (temperature: Float, pressure: Float, humidity: Float) {
         log.d("Reading BME280 sensor data")
         // Configure humidity oversampling (x1)
         try device.transmit(data: [Registers.ctrlHum.rawValue, 0x01], timeoutMs: 100)
