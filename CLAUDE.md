@@ -8,7 +8,7 @@ Depends on: `SwiftPlatform`, `SwiftI2C`, `SwiftSupport`
 
 | File | Role |
 |---|---|
-| `src/BME280.swift` | Public `BME280` struct + file-scope RTC-cached calibration data |
+| `Sources/BME280/BME280.swift` | Public `BME280` struct + file-scope RTC-cached calibration data |
 
 ## Public API
 
@@ -23,7 +23,7 @@ let (temperature, pressure, humidity) = try sensor.read()
 
 ## Non-obvious patterns
 
-**Pure-Swift component** — no C wrapper, no `module.modulemap`.
+**Pure-Swift component** — no C wrapper, so no C target.
 
 **Caller owns the bus** — `BME280.init(i2cMasterBus:)` registers a `Device` on the caller's bus. `BME280` is `~Copyable`; its `deinit` removes only the device — the bus is cleaned up separately by the caller's `I2CMasterBus` going out of scope.
 

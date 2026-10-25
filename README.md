@@ -4,6 +4,24 @@ Pure-Swift driver for the Bosch BME280 temperature/pressure/humidity sensor, bui
 
 Depends on: `SwiftPlatform`, `SwiftI2C`, `SwiftSupport`.
 
+## Adding it to a project
+
+This is a [SwiftPM](https://www.swift.org/package-manager/) package, built for ESP-IDF by
+`swift_package()` from [esp-swift-support](https://github.com/nixit22/esp-swift-support). In your
+app's `Package.swift`:
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/nixit22/esp-swift-bme280.git", branch: "SPM"),
+],
+targets: [
+    .target(name: "App", dependencies: [.product(name: "BME280", package: "esp-swift-bme280")]),
+]
+```
+
+See esp-swift-support's README for the project setup (top-level `CMakeLists.txt`, `main`
+component, Swift toolchain).
+
 ## Usage
 
 ```swift
