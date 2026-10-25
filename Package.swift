@@ -30,8 +30,8 @@ let package = Package(
         .library(name: "BME280", targets: ["BME280"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/nixit22/esp-swift-platform.git", branch: "SPM"),
-        .package(url: "https://github.com/nixit22/esp-swift-i2c.git", branch: "SPM"),
+        .package(url: "https://github.com/nixit22/esp-swift-platform.git", from: "0.1.0"),
+        .package(url: "https://github.com/nixit22/esp-swift-i2c.git", from: "0.1.0"),
     ],
     targets: [
         .target(
