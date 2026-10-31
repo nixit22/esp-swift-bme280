@@ -61,7 +61,8 @@ public struct BME280: ~Copyable {
     public func reset() throws(PlatformError) {
         log.d("Resetting BME280 and reading calibration data")
         try device.transmit(data: [Registers.reset.rawValue, 0xB6], timeoutMs: 100)
-        vTaskDelay(.init(ms: 100))
+        // Datasheet: 2 ms start-up after reset. 100 ms is far above 2 ms + two tick periods.
+        Task.delay(ms: 100)
         let calibrationData1 = try device.transmitReceive(
             transmitData: [Registers.calibrationData.rawValue], receiveLength: 26, timeoutMs: 100)
         let calibrationData2 = try device.transmitReceive(
@@ -75,9 +76,10 @@ public struct BME280: ~Copyable {
         try device.transmit(data: [Registers.ctrlHum.rawValue, 0x01], timeoutMs: 100)
         // Configure temperature and pressure oversampling (x1) and forced mode
         try device.transmit(data: [Registers.ctrlMeas.rawValue, 0x25], timeoutMs: 100)
-        // Wait for measurement: max ~10.4 ms for x1 oversampling. 12 ms
-        // ensures >=2 ticks at the 100 Hz default CONFIG_FREERTOS_HZ.
-        vTaskDelay(.init(ms: 12))
+        // Wait for measurement: max ~10.4 ms for x1 oversampling. Task.delay() can return up to
+        // two tick periods early (10 ms each at the 100 Hz default CONFIG_FREERTOS_HZ), so ask
+        // for the next multiple of the tick period at or above 10.4 ms + one tick period.
+        Task.delay(ms: 30)
 
         // Read all sensor data (pressure, temperature, humidity) - 8 bytes
         let data = try device.transmitReceive(transmitData: [Registers.data.rawValue], receiveLength: 8, timeoutMs: 100)
